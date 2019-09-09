@@ -1,0 +1,132 @@
+\documentclass{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{chngcntr}
+\usepackage{mathtools}
+
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\usepackage[dvipsnames]{xcolor}
+
+\newtheorem{theorem}{Theorem}[section] 
+\newtheorem{corollary}{Corollary}[theorem] 
+\newtheorem{lemma}[theorem]{Lemma} 
+\newtheorem{proposition}{Proposition}[section]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\theoremstyle{definition}
+\newtheorem{example}{Example}[definition]
+\newcounter{exercise}[subsection]
+\newenvironment{exercise}{\refstepcounter{exercise}\textbf{Exercise~\theexercise}\begin{proof}}{\end{proof}}
+\counterwithin*{equation}{section}
+\counterwithin*{equation}{subsection}
+
+
+
+\title{Analytical Number Theory}
+\author{Razafy Rindra}
+\date{Fall 2019}
+\begin{document}
+	\maketitle
+	\section{Notation}
+		\begin{definition}
+			Landau's Big-Oh, Little-Oh and $\sim$. Let $a$ be finite or infinite:
+			\begin{enumerate}
+				\item We say that $f(x)\sim g(x)$ as a $x\rightarrow a$, if\begin{equation*}
+					\lim_{x\rightarrow a} \frac{f(x)}{g(x)} = 1
+				\end{equation*}
+				\item Big-oh: We say that $f(x) = O(g(x))$ as $x\rightarrow \infty$, if there exists $x_0\in \R$, and $c>0$, such that:\begin{equation*}
+					|f(x)| \leq cg(x) \ \text{ for all } x>x_0
+				\end{equation*}\\
+				 We say that $f(x) = O(g(x))$ as $x\rightarrow a$, if there exists $\delta>0$, and $c>0$, such that:\begin{equation*}
+				|f(x)| \leq cg(x) \ \text{ for all } |x-a|<\delta
+				\end{equation*}
+				\item Little-oh: We say that $f(x) = o(g(x))$ as $x\rightarrow a$, if\begin{equation*}
+				\lim_{x\rightarrow a} \frac{f(x)}{g(x)} = 0
+				\end{equation*}
+			\end{enumerate}
+		\end{definition}
+	\begin{example} For $\sim$:
+			\begin{enumerate}
+				\item $\sin(x)\sim x$, as $x\rightarrow 0$.
+				\item Stirlings:\\
+					$n! \sim (\frac{n}{e})^n\sqrt{2\pi n}$, as $n\rightarrow \infty$.
+			\end{enumerate}
+	\end{example}
+	\begin{example} For Big-Oh:
+		\begin{enumerate}
+			\item $\sin(x) = O(1)$. As $x\rightarrow \infty$ since $\sin(x)$ is bounded.
+			\item $\sin(x) = x - \frac{x^3}{3!} + O(x^5)$. As $x\rightarrow 0$ since: \begin{equation*}
+				\sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^{n}x^{2n+1}}{(2n+1!)} \Rightarrow \sin(x) - x - \frac{x^3}{3!} = \frac{x^5}{5!} - \frac{x^7}{7!} +\cdots
+			\end{equation*}
+		\end{enumerate}
+	\end{example}
+	\begin{example} For Little-Oh: $n! = o(n^n)$, since \begin{equation*}
+			\frac{n!}{n^n} \sim \frac{\sqrt{2\pi n}}{e^n} = \sqrt{2\pi}e^{\frac{1}{2}\log(n) - n}
+		\end{equation*}
+	\end{example}
+\section{Summation by parts}
+Let $f$ be a function from $\Z^+$ to $\R$ or $\C$, and $g$ a real or complex valued function of a real variable. If $g'$ exists and is continuous on $[1,x]$ for some $x\in R$. We find that:\begin{equation}
+	\sum_{1\leq n \leq x} f(n)g(n) = (\sum_{1\leq n\leq x}f(n))g(x) - \int_1^x \sum_{1\leq n\leq t}f(t)g'(t)dt
+\end{equation}
+\begin{proof}
+	\begin{align*}
+		f(n)g(n) &= f(n)g(x) - f(n)\int_{n}^x g'(t)dt\\
+		\sum_{1\leq n\leq x}f(n)g(n)&= \sum_{1\leq n\leq x}f(n)g(x) - \sum_{1\leq n\leq x}f(n)\int_{n}^x g'(t)dt\\
+	\end{align*}
+	We can bring in all the $f(n)$ where $n\leq t$, inside the same integral, and this gives us our result.
+\end{proof}
+\begin{proof}
+	Alternate proof using telescoping:
+		Since $\int_1^x = \int_1^2 + \int_2^3+\cdots + \int_{\floor*{x}}^x$
+	  \begin{align*}
+	  	&\sum_{1\leq n\leq x}f(n)g(x) - \int_1^x (\sum_{1\leq n \leq t}f(n))g'(t)dt = \\
+	  	&(\sum_{1\leq n\leq x}f(n))g(x) - f(1)(g(2)-g(1)) - (f(1) + f(2))(g(3) - g(2)) - \cdots - (\sum_{1\leq n\leq x}f(n))(g(x) - g(\floor{x}))
+	  \end{align*}
+	  By telescoping we get the desired result.
+\end{proof}
+\subsection{$\sum_{1\leq n\leq \floor*{x}}$}
+
+	$\sum_{1\leq n\leq \floor*{x}} \frac{1}{n}$, in this situation we have $f(n) = 1$ and $g(x) = \frac{1}{x}$. So, we have: $\sum_{1\leq n \leq x} 1 = \floor{x}$. We define ${x}$ to be the fractional part of $x$, so that $\floor{x} = x - \{x\}$.
+	
+	Hence we have:\begin{align*}
+		\sum_{1\leq n\leq \floor*{x}} \frac{1}{n} &= \floor{x}\frac{1}{x} + \int_{1}^x \floor{t}\frac{1}{t^2}dt\\
+		&= 1 - \frac{\{x\}}{x} + \log(x) - \int_{1}^x\frac{\{t\}}{t^2}dt\\
+		&= 1 - \frac{\{x\}}{x} + \log(x) - (\int_{1}^\infty\frac{\{t\}}{t^2}dt- \int_{x}^\infty\frac{\{t\}}{t^2}dt)\\
+	\end{align*}
+	Since $- \frac{\{x\}}{x} = O(\frac{1}{x})$ and $\int_{x}^\infty\frac{\{t\}}{t^2}dt) = O(\frac{1}{x})$, we finally get at the end:\begin{equation*}
+		\sum_{1\leq n\leq x}\frac{1}{n} = \log(x) + (1 - \int_{1}^\infty\frac{\{t\}}{t^2}dt) + O(\frac{1}{x})
+	\end{equation*}
+	We call $1 - \int_{1}^\infty\frac{\{t\}}{t^2}dt = \gamma = 0.5772\cdots$ Euler's constant.
+
+
+This example tells us that: $$\lim_{x\rightarrow\infty} (\sum_{1\leq n\leq x}\frac{1}{n} - \log(x)) = \gamma$$
+
+\
+
+\subsection{$\log(m!)$}
+Consider: $\log(m!) = \sum_{1\leq n\leq m}\log(n)$; let $f(n) = 1$ and $g(x) = \log(x)$.\begin{align*}
+	\log(m!) &= m\log(m) - \int_{1}^m \frac{\floor{t}}{t}dt\\
+	&= m\log(m) - \int_{1}^m \frac{t-\{t\}}{t}dt\\
+	&= m\log(m) - (m-1) + \int_{1}^m \frac{\{t\}}{t}dt\\
+\end{align*}
+
+Since $0 < \int_{1}^m \frac{\{t\}}{t}dt <\log(m)$, we have $m\log(m) - (m-1) < \log(m!) < (m+1)\log(m) - (m-1)$\\
+Thus: $$\frac{m^m}{e^{m-1}}< m! <\frac{m^{m+1}}{e^{m-1}} \text{ in reality }m!\sim (\frac{m}{e})^m\sqrt{2\pi m}$$
+\end{document}
